@@ -17,7 +17,8 @@ const users = [
 function mkDir(diectory) {
     fs.mkdir(path.join(__dirname, diectory), (err => {
         if (err)
-            return console.log(err);
+            console.log(err);
+        return;
     }))
 }
 
@@ -31,7 +32,7 @@ function creatFile() {
     users.map(item => fs.appendFile(path.join(__dirname, 'users', `${item.name}.txt`), `${JSON.stringify(item)}`, (err => {
                 if (err) {
                     console.log(err);
-                    return
+                    return;
                 }
             }
         )
@@ -94,7 +95,6 @@ function sortUsers() {
                                 return;
                             }
                         }));
-
 
                 }));
             });
