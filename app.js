@@ -12,7 +12,7 @@ const users = [
     {name: 'arsen', gender: 'male', age: 18},
     {name: 'sofia', gender: 'female', age: 26},
     {name: 'ivan', gender: 'male', age: 19}
-]
+];
 
 function mkDir(diectory) {
     fs.mkdir(path.join(__dirname, diectory), (err => {
