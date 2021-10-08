@@ -1,47 +1,34 @@
-const db = require('../dataBase/users.json');
 const fs = require('fs');
 const path = require('path');
 
+const db = require('../dataBase/users.json');
+const userService = require('../services/user.service');
+
 module.exports = {
-    getUsers: (req, res) => {
-        fs.readFile(path.join(__dirname, 'dataBase', 'users.json'), ((err, data) => {
-            if (err) {
-                console.log(err);
-                return
-            }
-        }))
+    getUsers: async (req, res) => {
+        const data = await userService.readFile();
         res.json(db);
     },
-    getUserById: (req, res) => {
-        fs.readFile(path.join(__dirname, 'dataBase', 'users.json'), ((err, data) => {
-            if (err) {
-                console.log(err);
-                return
-            }
-        }))
+
+    getUserById: async (req, res) => {
+        const data = await userService.readFile();
         const {user_id} = req.params;
-        const user = db[user_id - 1];
+        const user = data[user_id - 1];
         res.json(user);
     },
-    createUser: (req, res) => {
-        fs.readFile(path.join(__dirname, 'dataBase', 'users.json'), ((err, data) => {
-            if (err) {
-                console.log(err);
-                return
-            }
-            const newUser = JSON.parse(db.push({...req.body, id: db.length + 1}));
-            fs.writeFile('users.json', `${JSON.stringify(newUser)}`, ((err) => {
-                if (err) {
-                    console.log(err);
-                    return
-                }
 
-            }))
-        }))
-
-        res.json(db);
+    createUser: async (req, res) => {
+        const data = await userService.readFile();
+        data.push({id: data.length + 1, ...req.body});
+        const newData = await userService.writeFile(data);
+        res.json(newData);
     },
-    updateUser: (req, res) => {
-        res.json('UPDATE USER');
+
+    deleteUser: async (req, res) => {
+        let data = await userService.readFile();
+        const {user_id} = req.params;
+        const filterData = data.filter(user => user.id !== +user_id);
+        const newData = await userService.writeFile(filterData);
+        res.json(newData);
     }
 }

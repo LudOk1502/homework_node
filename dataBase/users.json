@@ -5,23 +5,18 @@
     "age": 20
   },
   {
-    "id": 2,
-    "name": "Karina",
-    "age": 25
-  },
-  {
     "id": 3,
     "name": "Oleg",
     "age": 32
   },
   {
-    "id": 4,
-    "name": "Anna",
-    "age": 19
+    "id": 6,
+    "name": "Artem",
+    "age": 43
   },
   {
-    "id": 5,
-    "name": "Ruslan",
-    "age": 25
+    "id": 7,
+    "name": "Polina",
+    "age": 29
   }
 ]
