@@ -15,5 +15,16 @@
     "husky": "^4.3.0",
     "joi": "^17.4.2",
     "lint-staged": "^11.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "gitadd"
+    ]
   }
 }
