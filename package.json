@@ -13,5 +13,16 @@
     "eslint-plugin-node": "^11.1.0",
     "husky": "^4.3.0",
     "lint-staged": "^11.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "gitadd"
+    ]
   }
 }
