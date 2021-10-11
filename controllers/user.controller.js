@@ -1,34 +1,64 @@
-const fs = require('fs');
-const path = require('path');
-
-const db = require('../dataBase/users.json');
-const userService = require('../services/user.service');
+const User = require('../dataBase/User');
 
 module.exports = {
     getUsers: async (req, res) => {
-        const data = await userService.readFile();
-        res.json(db);
+        try {
+            const users = await User.find();
+            res.json(users);
+        } catch (e) {
+            res.json(e);
+        }
+
     },
 
     getUserById: async (req, res) => {
-        const data = await userService.readFile();
-        const {user_id} = req.params;
-        const user = data[user_id - 1];
-        res.json(user);
+        try {
+            const {user_id} = req.params;
+            const user = await User.findById(user_id);
+            res.json(user);
+        } catch (e) {
+            res.json(e);
+        }
     },
 
     createUser: async (req, res) => {
-        const data = await userService.readFile();
-        data.push({id: data.length + 1, ...req.body});
-        const newData = await userService.writeFile(data);
-        res.json(newData);
+        try {
+            const newUser = await User.create(req.body);
+            res.json(newUser);
+        } catch (e) {
+            res.json(e);
+        }
     },
 
     deleteUser: async (req, res) => {
-        let data = await userService.readFile();
-        const {user_id} = req.params;
-        const filterData = data.filter(user => user.id !== +user_id);
-        const newData = await userService.writeFile(filterData);
-        res.json(newData);
-    }
+        try {
+            const {user_id} = req.params;
+            let user = await User.findByIdAndDelete(user_id);
+            res.json(`${user.name} - ${user_id} - DELETE`);
+        } catch (e) {
+            res.json(e);
+        }
+    },
+
+    updateUser: async (req, res) => {
+        try {
+            const {user_id} = req.params;
+            let updateUser = await User.findOneAndUpdate(user_id, req.body);
+            res.json(updateUser);
+        } catch (e) {
+            res.json(e);
+        }
+    },
+    loginUser: async (req, res) => {
+        try {
+            const {user_email, user_password} = req.body;
+            let user = await User.findOneAndUpdate(user_email, user_password);
+            if (user) {
+                res.json(`User ${user.name} login!`);
+            }
+            res.json('User not found');
+        } catch (e) {
+            res.json(e);
+        }
+    },
 }
