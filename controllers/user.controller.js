@@ -10,7 +10,6 @@ module.exports = {
         } catch (e) {
             res.json(e);
         }
-
     },
 
     getUserById: async (req, res) => {
@@ -39,7 +38,7 @@ module.exports = {
     deleteUser: async (req, res) => {
         try {
             const {user_id} = req.params;
-            let user = await User.findByIdAndDelete(user_id);
+            const user = await User.findByIdAndDelete(user_id);
             res.json(`${user.name} - ${user_id} - DELETE`);
         } catch (e) {
             res.json(e);
@@ -49,7 +48,7 @@ module.exports = {
     updateUser: async (req, res) => {
         try {
             const {user_id} = req.params;
-            let updateUser = await User.findOneAndUpdate(user_id, req.body);
+            const updateUser = await User.findOneAndUpdate(user_id, req.body);
             res.json(updateUser);
         } catch (e) {
             res.json(e);
@@ -58,7 +57,7 @@ module.exports = {
     loginUser: async (req, res) => {
         try {
             const {user_email, user_password} = req.body;
-            let user = await User.findOneAndUpdate(user_email, user_password);
+            const user = await User.findOneAndUpdate(user_email, user_password);
             if (user) {
                 res.json(`User ${user.name} login!`);
             }
@@ -67,4 +66,4 @@ module.exports = {
             res.json(e);
         }
     },
-}
+};

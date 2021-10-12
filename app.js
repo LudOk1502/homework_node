@@ -12,5 +12,6 @@ app.use(express.urlencoded({extended: true}));
 app.use('/users', userRouter);
 
 app.listen(PORT, () => {
+    // eslint-disable-next-line no-console
     console.log(`App listen ${PORT}`);
 });

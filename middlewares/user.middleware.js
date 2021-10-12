@@ -15,6 +15,7 @@ module.exports = {
     },
     getUserByEmailAndPasswordMiddleware: async (req, res, next) => {
         try {
+            // eslint-disable-next-line no-unused-vars
             const {email} = req.params;
             const user = await User.findOne({email: req.body.email, password: req.body.password});
             if (!user) {
@@ -26,9 +27,23 @@ module.exports = {
             res.json(e.message);
         }
     },
+    getUserByIdMiddleware: async (req, res, next) => {
+        try {
+            const {user_id} = req.params;
+            const user = await User.findById(user_id);
+            if (!user) {
+                throw new Error('User not found');
+            }
+            req.json = user;
+            next();
+        } catch (e) {
+            res.join(e.message);
+        }
+    },
     isUserBodyValid: (req, res, next) => {
         try {
-            let {error, value} = userValidator.creatUserValidator.validate(req.body);
+            // eslint-disable-next-line no-unused-vars
+            const {error, value} = userValidator.creatUserValidator.validate(req.body);
 
             if (error) {
                 throw new Error(error.details[0].message);
