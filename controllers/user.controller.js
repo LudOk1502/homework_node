@@ -15,7 +15,7 @@ module.exports = {
     getUserById: async (req, res) => {
         try {
             const {user_id} = req.params;
-            let user = await User.findById(user_id);
+            let user = await User.findById(user_id).lean();
 
             user = userUtil.userNormalizator(user);
 
@@ -25,13 +25,13 @@ module.exports = {
         }
     },
 
-    createUser: async (req, res) => {
+    createUser: async (req, res, next) => {
         try {
             const hashedPassword = await passwordService.hash(req.body.password);
             const newUser = await User.create({...req.body, password: hashedPassword});
             res.json(newUser);
         } catch (e) {
-            res.json(e);
+            next(e);
         }
     },
 
@@ -53,17 +53,5 @@ module.exports = {
         } catch (e) {
             res.json(e);
         }
-    },
-    loginUser: async (req, res) => {
-        try {
-            const {user_email, user_password} = req.body;
-            const user = await User.findOneAndUpdate(user_email, user_password);
-            if (user) {
-                res.json(`User ${user.name} login!`);
-            }
-            res.json('User not found');
-        } catch (e) {
-            res.json(e);
-        }
-    },
+    }
 };

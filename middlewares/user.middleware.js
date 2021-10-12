@@ -40,6 +40,20 @@ module.exports = {
             res.join(e.message);
         }
     },
+    isUserPresent: async (req, res, next) => {
+        try {
+            const userByEmail = await User.findOne({email: req.body.email})
+                .select('+password')
+                .lean();
+            if (!userByEmail) {
+                throw new Error('Wrong email or password!');
+            }
+            req.user = userByEmail;
+            next();
+        } catch (e) {
+            res.json(e.message);
+        }
+    },
     isUserBodyValid: (req, res, next) => {
         try {
             // eslint-disable-next-line no-unused-vars

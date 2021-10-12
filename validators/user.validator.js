@@ -8,8 +8,7 @@ const creatUserValidator = Joi.object({
         .min(2)
         .max(30)
         .trim()
-        .required()
-        .uppercase(),
+        .required(),
     email: Joi.string()
         .regex(EMAIL_REGEXP)
         .required(),
@@ -18,15 +17,13 @@ const creatUserValidator = Joi.object({
     password: Joi.string()
         .regex(PASSWORD_REGEXP)
         .required()
-        .strict()
 });
 
 const updateUserValidator = Joi.object({
     name: Joi.string().alphanum()
         .min(2)
         .max(30)
-        .trim()
-        .uppercase(),
+        .trim(),
     email: Joi.string().regex(EMAIL_REGEXP),
     role: Joi.string().allow(...Object.values(userRoles)),
     password: Joi.forbidden()
