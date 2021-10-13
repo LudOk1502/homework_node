@@ -29,7 +29,9 @@ module.exports = {
         try {
             const hashedPassword = await passwordService.hash(req.body.password);
             const newUser = await User.create({...req.body, password: hashedPassword});
-            res.json(newUser);
+            let user = await User.findOne({email: newUser.email}).lean();
+            user = userUtil.userNormalizator(user);
+            res.json(user);
         } catch (e) {
             next(e);
         }
