@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const {MONGO_CONNECT_URL, PORT} = require('./configs/config');
 
@@ -17,7 +18,7 @@ app.use('/users', userRouter);
 // eslint-disable-next-line no-unused-vars
 app.use('*', (err, req, res, next) => {
     res
-        .status(err.status)
+        .status(err.status || 500)
         .json({
             message: err.message
         });

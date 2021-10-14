@@ -1,5 +1,6 @@
 const User = require('../dataBase/User');
-const userValidator = require('../validators/user.validator');
+const {userValidator} = require('../validators');
+const {ErrorHandler} = require('../errors/ErrorHandler');
 
 module.exports = {
     createUserMiddleware: async (req, res, next) => {
@@ -7,7 +8,7 @@ module.exports = {
             const userByEmail = await User.findOne({email: req.body.email});
 
             if (userByEmail) {
-                throw new Error('Email already exist');
+                throw new ErrorHandler('Email already exist', 404);
             }
 
             next();
@@ -22,7 +23,7 @@ module.exports = {
             const user = await User.findById(user_id);
 
             if (!user) {
-                throw new Error('User not found');
+                throw new ErrorHandler('User not found', 404);
             }
 
             req.json = user;
@@ -40,7 +41,7 @@ module.exports = {
                 .lean();
 
             if (!userByEmail) {
-                throw new Error('Wrong email or password!');
+                throw new ErrorHandler('Wrong email or password!', 404);
             }
 
             req.user = userByEmail;
@@ -57,7 +58,7 @@ module.exports = {
 
 
             if (error) {
-                throw new Error(error.details[0].message);
+                throw new ErrorHandler('Data not correct!', 404);
             }
 
             req.body = value;
@@ -73,10 +74,24 @@ module.exports = {
             const {error, value} = userValidator.updateUserValidator.validate(req.body);
 
             if (error) {
-                throw new Error(error.details[0].message);
+                throw new ErrorHandler('Data not correct', 404);
             }
 
             req.body = value;
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkUserRole: (roleArr = []) => (req, res, next) => {
+        try {
+            const {role} = req.body;
+
+            if (!roleArr.includes(role)) {
+                throw new ErrorHandler('Access denied', 404);
+            }
+
             next();
         } catch (e) {
             next(e);
