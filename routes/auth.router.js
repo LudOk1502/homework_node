@@ -6,9 +6,11 @@ const authMiddleware = require('../middlewares/auth.middleware');
 const userMiddleware = require('../middlewares/user.middleware');
 
 router.post('/',
+    authMiddleware.isAuthUserBodyValid,
     userMiddleware.isUserPresent,
     authMiddleware.isPasswordsMatched,
     authController.login);
+
 router.post('/logout', authController.logout);
 
 module.exports = router;
