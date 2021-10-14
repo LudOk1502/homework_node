@@ -13,10 +13,9 @@ module.exports = {
                 throw new Error('Passwords does not match!');
             }
 
-
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
     isAuthUserBodyValid: async (req, res, next) => {
@@ -31,7 +30,7 @@ module.exports = {
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     }
 };

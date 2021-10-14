@@ -12,7 +12,7 @@ module.exports = {
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 
@@ -29,7 +29,7 @@ module.exports = {
 
             next();
         } catch (e) {
-            res.join(e.message);
+            next(e);
         }
     },
 
@@ -47,7 +47,7 @@ module.exports = {
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 
@@ -64,7 +64,7 @@ module.exports = {
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 
@@ -79,7 +79,7 @@ module.exports = {
             req.body = value;
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     }
 };

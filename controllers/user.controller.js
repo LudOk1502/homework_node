@@ -3,17 +3,17 @@ const passwordService = require('../services/password.service');
 const userUtil = require('../util/user.util');
 
 module.exports = {
-    getUsers: async (req, res) => {
+    getUsers: async (req, res, next) => {
         try {
             const users = await User.find();
 
             res.json(users);
         } catch (e) {
-            res.json(e);
+            next(e);
         }
     },
 
-    getUserById: async (req, res) => {
+    getUserById: async (req, res, next) => {
         try {
             const {user_id} = req.params;
             let user = await User.findById(user_id).lean();
@@ -22,7 +22,7 @@ module.exports = {
 
             res.json(user);
         } catch (e) {
-            res.json(e);
+            next(e);
         }
     },
 
@@ -40,25 +40,25 @@ module.exports = {
         }
     },
 
-    deleteUser: async (req, res) => {
+    deleteUser: async (req, res, next) => {
         try {
             const {user_id} = req.params;
             const user = await User.findByIdAndDelete(user_id);
 
             res.json(`${user.name} - ${user_id} - DELETE`);
         } catch (e) {
-            res.json(e);
+            next(e);
         }
     },
 
-    updateUser: async (req, res) => {
+    updateUser: async (req, res, next) => {
         try {
             const {user_id} = req.params;
             const updateUser = await User.findOneAndUpdate(user_id, req.body, {new: true}).lean();
 
             res.json(updateUser);
         } catch (e) {
-            res.json(e);
+            next(e);
         }
     }
 };
