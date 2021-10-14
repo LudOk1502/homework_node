@@ -2,24 +2,24 @@ const User = require('../dataBase/User');
 const {userNormalizator} = require('../util/user.util');
 
 module.exports = {
-    login: (req, res, next) => {
+    login: (req, res) => {
         try {
             const {user} = req;
             const userNormalized = userNormalizator(user);
 
             res.json(userNormalized);
         } catch (e) {
-            next(e);
+            res.json(e);
         }
     },
 
-    logout: async (req, res, next) => {
+    logout: async (req, res) => {
         try {
             const users = await User.find();
 
             res.json(users);
         } catch (e) {
-            next(e);
+            res.json(e);
         }
     },
 };
