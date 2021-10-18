@@ -26,11 +26,11 @@ router.delete('/:user_id',
 
 router.put('/:user_id',
     userMiddleware.isUpdateUserBodyValid,
+    userMiddleware.getUserByIdMiddleware,
     userMiddleware.checkUserRole([
         userRoles.USER,
         userRoles.ADMIN
     ]),
     userController.updateUser);
-
 
 module.exports = router;

@@ -1,14 +1,16 @@
 const User = require('../dataBase/User');
 const {userValidator} = require('../validators');
 const {ErrorHandler} = require('../errors/ErrorHandler');
+const {errorMessages, errorStatus} = require('../configs');
 
 module.exports = {
     createUserMiddleware: async (req, res, next) => {
         try {
-            const userByEmail = await User.findOne({email: req.body.email});
+            const {email} = req.body;
+            const userByEmail = await User.findOne({email});
 
             if (userByEmail) {
-                throw new ErrorHandler('Email already exist', 404);
+                throw new ErrorHandler(errorMessages.EMAIL_ALREADY_EXISTS, errorStatus.STATUS_400);
             }
 
             next();
@@ -23,11 +25,10 @@ module.exports = {
             const user = await User.findById(user_id);
 
             if (!user) {
-                throw new ErrorHandler('User not found', 404);
+                throw new ErrorHandler(errorMessages.USER_NOT_FOUND, errorStatus.STATUS_404);
             }
 
-            req.json = user;
-
+            req.user = user;
             next();
         } catch (e) {
             next(e);
@@ -36,12 +37,13 @@ module.exports = {
 
     isUserPresent: async (req, res, next) => {
         try {
-            const userByEmail = await User.findOne({email: req.body.email})
+            const {email} = req.body;
+            const userByEmail = await User.findOne({email})
                 .select('+password')
                 .lean();
 
             if (!userByEmail) {
-                throw new ErrorHandler('Wrong email or password!', 404);
+                throw new ErrorHandler(errorMessages.WRONG_EMAIL_OR_PASSWORD, errorStatus.STATUS_404);
             }
 
             req.user = userByEmail;
@@ -56,9 +58,8 @@ module.exports = {
         try {
             const {error, value} = await userValidator.creatUserValidator.validate(req.body);
 
-
             if (error) {
-                throw new ErrorHandler('Data not correct!', 404);
+                throw new ErrorHandler(errorMessages.BAD_REQUEST, errorStatus.STATUS_400);
             }
 
             req.body = value;
@@ -69,12 +70,12 @@ module.exports = {
         }
     },
 
-    isUpdateUserBodyValid: (req, res, next) => {
+    isUpdateUserBodyValid: async (req, res, next) => {
         try {
-            const {error, value} = userValidator.updateUserValidator.validate(req.body);
+            const {error, value} = await userValidator.updateUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler('Data not correct', 404);
+                throw new ErrorHandler(errorMessages.BAD_REQUEST, errorStatus.STATUS_400);
             }
 
             req.body = value;
@@ -86,10 +87,10 @@ module.exports = {
 
     checkUserRole: (roleArr = []) => (req, res, next) => {
         try {
-            const {role} = req.body;
+            const {role} = req.user;
 
             if (!roleArr.includes(role)) {
-                throw new ErrorHandler('Access denied', 404);
+                throw new ErrorHandler(errorMessages.ACCESS_DENIED, errorStatus.STATUS_403);
             }
 
             next();

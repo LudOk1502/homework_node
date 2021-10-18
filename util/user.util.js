@@ -3,7 +3,7 @@ module.exports = {
         const fieldsToRemove = ['password'];
 
         fieldsToRemove.forEach((field) => {
-            delete userToNormalize[field];
+            userToNormalize[field] = undefined;
         });
 
         return userToNormalize;
