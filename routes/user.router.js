@@ -2,7 +2,7 @@
 const router = require('express').Router();
 
 const {userController} = require('../controllers');
-const {userMiddleware} = require('../middlewares');
+const {userMiddleware, authMiddleware} = require('../middlewares');
 const {userRoles} = require('../configs');
 
 router.get('/', userController.getUsers);
@@ -22,6 +22,7 @@ router.delete('/:user_id',
         userRoles.USER,
         userRoles.ADMIN
     ]),
+    authMiddleware.checkAuthToken,
     userController.deleteUser);
 
 router.put('/:user_id',
@@ -31,6 +32,7 @@ router.put('/:user_id',
         userRoles.USER,
         userRoles.ADMIN
     ]),
+    authMiddleware.checkAuthToken,
     userController.updateUser);
 
 module.exports = router;

@@ -51,6 +51,7 @@ module.exports = {
         try {
             const {_id} = req.user;
             const {name} = req.body;
+
             const updateUser = await User.findByIdAndUpdate({_id}, {name}, {new: true});
 
             res.json(updateUser);
