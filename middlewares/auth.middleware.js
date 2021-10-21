@@ -2,7 +2,7 @@ const {passwordService, jwtService} = require('../services');
 const {authValidator} = require('../validators');
 const {ErrorHandler} = require('../errors/ErrorHandler');
 const {errorStatus, errorMessages, constants, tokenTypeEnum} = require('../configs');
-const O_Auth = require('../dataBase/O_Auth');
+const {O_Auth} = require('../dataBase');
 
 module.exports = {
     isPasswordsMatched: async (req, res, next) => {

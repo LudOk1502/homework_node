@@ -1,4 +1,4 @@
-const User = require('../dataBase/User');
+const {User} = require('../dataBase');
 const {userValidator} = require('../validators');
 const {ErrorHandler} = require('../errors/ErrorHandler');
 const {errorMessages, errorStatus} = require('../configs');
@@ -10,7 +10,7 @@ module.exports = {
             const userByEmail = await User.findOne({email});
 
             if (userByEmail) {
-                throw new ErrorHandler(errorMessages.EMAIL_ALREADY_EXISTS, errorStatus.STATUS_400);
+                throw new ErrorHandler(errorMessages.EMAIL_ALREADY_EXISTS, errorStatus.STATUS_409);
             }
 
             next();
@@ -43,7 +43,7 @@ module.exports = {
                 .lean();
 
             if (!userByEmail) {
-                throw new ErrorHandler(errorMessages.WRONG_EMAIL_OR_PASSWORD, errorStatus.STATUS_404);
+                throw new ErrorHandler(errorMessages.WRONG_EMAIL_OR_PASSWORD, errorStatus.STATUS_400);
             }
 
             req.user = userByEmail;

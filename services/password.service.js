@@ -8,7 +8,7 @@ module.exports = {
     compare: async (password, hashPassword) => {
         const isPasswordMatched = await bcrypt.compare(password, hashPassword);
         if (!isPasswordMatched) {
-            throw new ErrorHandler(errorMessages.WRONG_EMAIL_OR_PASSWORD, errorStatus.STATUS_404);
+            throw new ErrorHandler(errorMessages.WRONG_EMAIL_OR_PASSWORD, errorStatus.STATUS_400);
         }
     }
 };

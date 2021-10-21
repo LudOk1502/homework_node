@@ -1,6 +1,8 @@
-const User = require('../dataBase/User');
-const passwordService = require('../services/password.service');
+const {constants} = require('../configs');
+const {User, O_Auth} = require('../dataBase');
+const {passwordService} = require('../services');
 const {userNormalizator} = require('../util/user.util');
+const {errorStatus} = require('../configs');
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -30,7 +32,7 @@ module.exports = {
 
             const user = userNormalizator(newUser);
 
-            res.json(user);
+            res.json(user).status(errorStatus.STATUS_201);
         } catch (e) {
             next(e);
         }
@@ -38,10 +40,13 @@ module.exports = {
 
     deleteUser: async (req, res, next) => {
         try {
-            const {user_id} = req.params;
-            const user = await User.findByIdAndDelete(user_id).lean();
+            const token = req.get(constants.AUTHORIZATION);
 
-            res.json(`${user.name} - ${user_id} - DELETE`);
+            await User.deleteOne(req.user);
+
+            await O_Auth.deleteOne({access_token: token});
+
+            res.sendStatus(errorStatus.STATUS_204);
         } catch (e) {
             next(e);
         }
@@ -54,7 +59,7 @@ module.exports = {
 
             const updateUser = await User.findByIdAndUpdate({_id}, {name}, {new: true});
 
-            res.json(updateUser);
+            res.json(updateUser).status(errorStatus.STATUS_201);
         } catch (e) {
             next(e);
         }

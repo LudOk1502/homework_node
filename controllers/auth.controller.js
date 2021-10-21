@@ -1,4 +1,4 @@
-const O_Auth = require('../dataBase/O_Auth');
+const {O_Auth} = require('../dataBase');
 const {userNormalizator} = require('../util/user.util');
 const {jwtService} = require('../services');
 const {constants} = require('../configs');
