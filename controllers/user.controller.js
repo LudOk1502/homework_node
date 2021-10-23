@@ -1,7 +1,8 @@
-const {errorStatus, constants} = require('../configs');
+const {Action, O_Auth, User} = require('../dataBase');
+const {errorStatus, constants, tokenTypeEnum} = require('../configs');
+const {jwtService} = require('../services');
 const {passwordService, emailService} = require('../services');
 const {userNormalizator} = require('../util/user.util');
-const {User, O_Auth} = require('../dataBase');
 const {WELCOME, DELETE, UPDATE} = require('../configs/email-action.enum');
 
 
@@ -34,7 +35,10 @@ module.exports = {
 
             const user = userNormalizator(newUser);
 
-            await emailService.sendMail(user.email, WELCOME, {userName: user.name});
+            const token = jwtService.createActionToken();
+            await Action.create({token, type: tokenTypeEnum.ACTION, user_id: user._id});
+            console.log(token, '__________');
+            await emailService.sendMail(user.email, WELCOME, {userName: user.name, token});
 
             res.json(user).status(errorStatus.STATUS_201);
         } catch (e) {

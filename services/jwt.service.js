@@ -16,11 +16,27 @@ module.exports = {
 
     verifyToken: async (token, tokenType = tokenTypeEnum.ACCESS) => {
         try {
-            const secret = tokenType === tokenTypeEnum.ACCESS ? config.JWT_ACCESS_SECRET : config.JWT_REFRESH_SECRET;
+            let secret = '';
+
+            switch (tokenType) {
+                case tokenTypeEnum.ACCESS:
+                    secret = config.JWT_ACCESS_SECRET;
+                    break;
+
+                case tokenTypeEnum.REFRESH:
+                    secret = config.JWT_REFRESH_SECRET;
+                    break;
+
+                case tokenTypeEnum.ACTION:
+                    secret = config.JWT_ACTION_SECRET;
+                    break;
+            }
 
             await jwt.verify(token, secret);
         } catch (e) {
             throw new ErrorHandler(errorMessages.INVALID_TOKEN, errorStatus.STATUS_401);
         }
-    }
+    },
+
+    createActionToken: () => jwt.sign({}, config.JWT_ACTION_SECRET, {expiresIn: '1d'})
 };

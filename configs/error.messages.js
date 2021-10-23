@@ -4,6 +4,7 @@ module.exports = {
     EMAIL_ALREADY_EXISTS: 'Email already exists',
     INVALID_TOKEN: 'Invalid token',
     FORBIDDEN: 'Forbidden',
+    USER_IS_ACTIVE: 'User is active',
     USER_NOT_FOUND: 'User not found',
     WRONG_EMAIL_OR_PASSWORD: 'Wrong email or password',
     WRONG_TEMPLATE_NAME: 'Wrong template name'

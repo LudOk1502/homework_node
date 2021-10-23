@@ -1,8 +1,8 @@
 const {emailService} = require('../services');
-const {constants} = require('../configs');
+const {constants, errorMessages, errorStatus} = require('../configs');
 const {jwtService} = require('../services');
 const {LOGIN} = require('../configs/email-action.enum');
-const {O_Auth} = require('../dataBase');
+const {O_Auth, User} = require('../dataBase');
 const {userNormalizator} = require('../util/user.util');
 
 
@@ -33,6 +33,18 @@ module.exports = {
             await O_Auth.deleteOne({access_token: token}, {new: true});
 
             res.json(`User ${user.name} logout!`);
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    activate: async (req, res, next) => {
+        try {
+            const {_id} = req.user;
+
+            await User.updateOne({_id}, {is_active: true});
+
+            res.json(errorMessages.USER_IS_ACTIVE).status(errorStatus.STATUS_200);
         } catch (e) {
             next(e);
         }
