@@ -1,4 +1,4 @@
 module.exports = {
-    O_Auth: require('../dataBase/O_Auth'),
-    User: require('../dataBase/User')
+    O_Auth: require('./O_Auth'),
+    User: require('./User')
 };

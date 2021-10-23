@@ -1,0 +1,11 @@
+.content {
+    color: darkblue;
+    font-size: 18px;
+    font-style: italic
+}
+
+.footer {
+    border: solid 2px darkgreen;
+    text-align: center;
+    color: crimson;
+}

@@ -1,7 +1,10 @@
+const {emailService} = require('../services');
+const {constants} = require('../configs');
+const {jwtService} = require('../services');
+const {LOGIN} = require('../configs/email-action.enum');
 const {O_Auth} = require('../dataBase');
 const {userNormalizator} = require('../util/user.util');
-const {jwtService} = require('../services');
-const {constants} = require('../configs');
+
 
 module.exports = {
     login: async (req, res, next) => {
@@ -13,6 +16,8 @@ module.exports = {
             const userNormalized = userNormalizator(user);
 
             await O_Auth.create({...tokenPair, user_id: userNormalized._id});
+
+            await emailService.sendMail(userNormalized.email, LOGIN, {userName: userNormalized.name});
 
             res.json({user: userNormalized, ...tokenPair});
         } catch (e) {

@@ -1,8 +1,9 @@
-const {constants} = require('../configs');
-const {User, O_Auth} = require('../dataBase');
-const {passwordService} = require('../services');
+const {errorStatus, constants} = require('../configs');
+const {passwordService, emailService} = require('../services');
 const {userNormalizator} = require('../util/user.util');
-const {errorStatus} = require('../configs');
+const {User, O_Auth} = require('../dataBase');
+const {WELCOME, DELETE, UPDATE} = require('../configs/email-action.enum');
+
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -28,9 +29,12 @@ module.exports = {
     createUser: async (req, res, next) => {
         try {
             const hashedPassword = await passwordService.hash(req.body.password);
+
             const newUser = await User.create({...req.body, password: hashedPassword});
 
             const user = userNormalizator(newUser);
+
+            await emailService.sendMail(user.email, WELCOME, {userName: user.name});
 
             res.json(user).status(errorStatus.STATUS_201);
         } catch (e) {
@@ -41,10 +45,13 @@ module.exports = {
     deleteUser: async (req, res, next) => {
         try {
             const token = req.get(constants.AUTHORIZATION);
+            const {email, name} = req.user;
 
             await User.deleteOne(req.user);
 
             await O_Auth.deleteOne({access_token: token});
+
+            await emailService.sendMail(email, DELETE, {userName: name});
 
             res.sendStatus(errorStatus.STATUS_204);
         } catch (e) {
@@ -58,6 +65,11 @@ module.exports = {
             const {name} = req.body;
 
             const updateUser = await User.findByIdAndUpdate({_id}, {name}, {new: true});
+
+            await emailService.sendMail(updateUser.email, UPDATE, {
+                userName: req.user.name,
+                newUserName: updateUser.name
+            });
 
             res.json(updateUser).status(errorStatus.STATUS_201);
         } catch (e) {

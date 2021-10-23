@@ -7,5 +7,4 @@ module.exports = {
     STATUS_404: 404,
     STATUS_409: 409,
     STATUS_500: 500,
-
 };
