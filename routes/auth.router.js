@@ -7,12 +7,14 @@ const {authMiddleware, userMiddleware} = require('../middlewares');
 router.post('/',
     authMiddleware.isAuthUserBodyValid,
     userMiddleware.isUserPresent,
-    authMiddleware.isPasswordsMatched,
     authController.login);
 
 router.post('/logout', authMiddleware.checkAuthToken, authController.logout);
 
-router.post('/refresh', authMiddleware.checkRefreshToken, authController.login);
+router.post('/refresh', authMiddleware.checkRefreshToken, authController.refreshToken);
+
+router.post('/password/forgot', authController.sendMailForgotPassword);
+router.post('/password/forgot/set', authController.setNewPasswordAfterForgot);
 
 module.exports = router;
 

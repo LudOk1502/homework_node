@@ -2,21 +2,9 @@ const {authValidator} = require('../validators');
 const {ErrorHandler} = require('../errors/ErrorHandler');
 const {errorStatus, errorMessages, constants, tokenTypeEnum} = require('../configs');
 const {O_Auth} = require('../dataBase');
-const {passwordService, jwtService} = require('../services');
+const {jwtService} = require('../services');
 
 module.exports = {
-    isPasswordsMatched: async (req, res, next) => {
-        try {
-            const {password} = req.body;
-            const {password: hashPassword} = req.user;
-
-            await passwordService.compare(password, hashPassword);
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
     isAuthUserBodyValid: async (req, res, next) => {
         try {
             const {error, value} = await authValidator.authUserValidator.validate(req.body);
@@ -67,7 +55,7 @@ module.exports = {
 
             await jwtService.verifyToken(token, tokenTypeEnum.REFRESH);
 
-            const tokenResponse = await O_Auth.findOne({refresh_token: token}).populate('user_id');
+            const tokenResponse = await O_Auth.findOne({refresh_token: token});
 
             if (!tokenResponse) {
                 throw new ErrorHandler(errorMessages.INVALID_TOKEN, errorStatus.STATUS_401);

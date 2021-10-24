@@ -6,5 +6,6 @@ module.exports = {
     FORBIDDEN: 'Forbidden',
     USER_NOT_FOUND: 'User not found',
     WRONG_EMAIL_OR_PASSWORD: 'Wrong email or password',
-    WRONG_TEMPLATE_NAME: 'Wrong template name'
+    WRONG_TEMPLATE_NAME: 'Wrong template name',
+    WRONG_TOKEN_TYPE: 'Wrong token type'
 };
